@@ -6,6 +6,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Add this GET route for the root URL
+app.get('/', (req, res) => {
+  res.send('Welcome to the Roblox AI backend! Use POST /ask to interact.');
+});
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
