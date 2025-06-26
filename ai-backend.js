@@ -30,7 +30,8 @@ app.post('/ask', async (req, res) => {
     const keywords = response.choices[0].message.content.trim();
     res.json({ keywords });
   } catch (error) {
-    console.error('OpenAI API error:', error);
+    // Improved error logging:
+    console.error('OpenAI API error:', error.response?.data || error.message || error);
     res.status(500).json({ error: 'Failed to process request.' });
   }
 });
