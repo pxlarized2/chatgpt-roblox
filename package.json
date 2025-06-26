@@ -1,0 +1,14 @@
+{
+  "name": "roblox-ai-server",
+  "version": "1.0.0",
+  "description": "AI backend to find Roblox games based on user input",
+  "main": "ai-backend.js",
+  "scripts": {
+    "start": "node ai-backend.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "openai": "^4.38.2"
+  }
+}
