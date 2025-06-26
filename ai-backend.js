@@ -6,31 +6,32 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Add this GET route for the root URL
-app.get('/', (req, res) => {
-  res.send('Welcome to the Roblox AI backend! Use POST /ask to interact.');
-});
-
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-app.post('/ask', async (req, res) => {
-  const userInput = req.body.query;
+app.get('/', (req, res) => {
+  res.send('Simple AI backend running. Use POST /chat to chat.');
+});
+
+app.post('/chat', async (req, res) => {
+  const userMessage = req.body.message;
+
+  if (!userMessage) {
+    return res.status(400).json({ error: 'No message provided' });
+  }
 
   try {
     const response = await openai.chat.completions.create({
       model: 'gpt-4',
       messages: [
-        { role: 'system', content: "You're an assistant that extracts Roblox game search keywords." },
-        { role: 'user', content: `Find keywords from this game idea: "${userInput}"` },
+        { role: 'user', content: userMessage }
       ],
     });
 
-    const keywords = response.choices[0].message.content.trim();
-    res.json({ keywords });
+    const aiReply = response.choices[0].message.content.trim();
+    res.json({ reply: aiReply });
   } catch (error) {
-    // Improved error logging:
     console.error('OpenAI API error:', error.response?.data || error.message || error);
     res.status(500).json({ error: 'Failed to process request.' });
   }
@@ -38,5 +39,5 @@ app.post('/ask', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`✅ AI server running on http://localhost:${PORT}`);
+  console.log(`AI server running on port ${PORT}`);
 });
