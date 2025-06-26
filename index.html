@@ -1,0 +1,60 @@
+const express = require('express');
+const cors = require('cors');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.static('public'));
+
+// Simulated AI function (in a real app, you'd call OpenAI API here)
+function getAIRecommendations(query) {
+    // This is where you'd integrate with OpenAI's API in a real implementation
+    // For now, we'll return simulated responses
+    
+    const recommendations = [
+        {
+            title: "Doors",
+            description: "A thrilling horror game where you navigate through a hotel full of monsters. Perfect for players who enjoy jump scares and suspense.",
+            url: "https://www.roblox.com/games/6516141723/Doors",
+            matchReason: "This horror game matches your request for a scary experience."
+        },
+        {
+            title: "Tower of Hell",
+            description: "A fast-paced obby (obstacle course) game with challenging levels that get progressively harder.",
+            url: "https://www.roblox.com/games/1962086868/Tower-of-Hell",
+            matchReason: "You mentioned obstacle courses - this is one of the best obby games!"
+        }
+    ];
+    
+    return {
+        query: query,
+        recommendations: recommendations,
+        timestamp: new Date().toISOString()
+    };
+}
+
+// API endpoint
+app.post('/api/recommend', (req, res) => {
+    const { query } = req.body;
+    
+    if (!query) {
+        return res.status(400).json({ error: 'Query is required' });
+    }
+    
+    // Simulate processing delay
+    setTimeout(() => {
+        const results = getAIRecommendations(query);
+        res.json(results);
+    }, 1500);
+});
+
+// Serve frontend
+app.get('*', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
+});
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
